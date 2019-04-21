@@ -1,54 +1,82 @@
 <!DOCTYPE <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
     <title>Parking Lots</title>
 
-    <meta name="viewport" content="initial-scale=1.0, 
-      width=device-width" />
-    <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js" 
-      type="text/javascript" charset="utf-8"></script>
-    <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" 
-      type="text/javascript" charset="utf-8"></script>
-    <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js" 
-      type="text/javascript" charset="utf-8"></script>
-    <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js" 
-      type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" type="text/css" 
-      href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
-      <link rel="stylesheet" href="css/creative.css" />
-    </head>
-    
-    <body>
-        <header class="masthead">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <script
+      src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="http://js.api.here.com/v3/3.0/mapsjs-ui.css"
+    />
+    <link rel="stylesheet" href="css/creative.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
 
-            <h1>Welcome!</h1>
-            
-            <div id="entries"> 
-                
-            </div>
-            
+  <body>
+    <header class="masthead">
+      <div class="jumbotron">
+        <h1 class="display-4 text-center">Parking Lot API</h1>
+        <p>
+          This API allows you to input a parking lot number and the number of
+          parking spaces that are available in that lot. You can also make a
+          query in the url to see which parking lot has spots available.
+        </p>
+        <hr class="my-4" />
+
+        <div id="entries"></div>
+
+        <div class="card w-25">
+          <div class="card-body">
             <form>
-                <label for="Lot"> Parking Lot</label>
-                <br>
-                <input type="text" id="Lots">
-        <br>
-        <label for="Spots"> Available Spots</label>
-        <br>
-        <input type="text" id="Spots">
-        <br>
-        <input class=" btn btn-primary " type="submit" value="Submit">
-        
-    </form>
-    <br><br><br><br>
-    <h1>Map</h1>
-    <p>Select the Layer Icon on the Map to change the view and look at traffic conditions and incedents.</p>
-    <div style="width: 640px; height: 480px" id="mapContainer"></div>
-    <script type="text/javascript" charset="utf-8">
-    //Initialize the Platform object:
+              <label for="Lot"> Parking Lot</label> <br />
+              <input type="text" id="Lots" /> <br />
+              <label for="Spots"> Available Spots</label> <br />
+              <input type="text" id="Spots" /> <br />
+              <input class=" btn btn-success " type="submit" value="Submit" />
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <br /><br />
+      <h1 class="text-center text-white">Map</h1>
+      <p class="text-white">
+        Select the Layer Icon (bottom right) on the Map to change the view and
+        look at traffic conditions and incedents around the campus.
+      </p>
+      <div style="width: 640px; height: 480px" id="mapContainer"></div>
+      <script type="text/javascript" charset="utf-8">
+        //Initialize the Platform object:
         var platform = new H.service.Platform({
-            'app_id': '6xKDnHG6lDepPse5mWQG',
-            'app_code': 'Sbqnvuzea-STJeDJTNfJwA'
+          app_id: "6xKDnHG6lDepPse5mWQG",
+          app_code: "Sbqnvuzea-STJeDJTNfJwA"
         });
 
         // Get the default map types from the Platform object:
@@ -56,71 +84,69 @@
 
         // Instantiate the map:
         var map = new H.Map(
-            document.getElementById('mapContainer'),
-            defaultLayers.normal.map,
-            {
+          document.getElementById("mapContainer"),
+          defaultLayers.normal.map,
+          {
             zoom: 15,
             center: { lng: -97.15, lat: 33.21 }
-            });
+          }
+        );
 
         // Create the default UI:
-        var ui = H.ui.UI.createDefault(map, defaultLayers, 'en-US');
-        
+        var ui = H.ui.UI.createDefault(map, defaultLayers, "en-US");
+
         // Enable the event system on the map instance:
         var mapEvents = new H.mapevents.MapEvents(map);
 
         // Add event listeners:
-        map.addEventListener('tap', function(evt) {
-        // Log 'tap' and 'mouse' events:
-        console.log(evt.type, evt.currentPointer.type); 
+        map.addEventListener("tap", function(evt) {
+          // Log 'tap' and 'mouse' events:
+          console.log(evt.type, evt.currentPointer.type);
         });
 
-        // Instantiate the default behavior, providing the mapEvents object: 
+        // Instantiate the default behavior, providing the mapEvents object:
         var behavior = new H.mapevents.Behavior(mapEvents);
-
-    </script>
-</header>
-    <br>
+      </script>
+    </header>
+    <br />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
-        var API_URL = 'https://79bw6y3ltl.execute-api.us-east-2.amazonaws.com/prod/myLambdaRodriguez';
-        
-        $('#submitButton').on('click', function(){
+      var API_URL =
+        "https://79bw6y3ltl.execute-api.us-east-2.amazonaws.com/prod/myLambdaRodriguez";
 
-            $.ajax({
-              type: 'POST',
-              url: API_URL,
-              data: {
-                    "Lots": $('#Lot').val(),
-                    "Spots": $('#Spots').val()
-              },
-              contentType: "application/json",
-
-              success: function(data){
-                  location.reload();
-              }
-            });
-
-            return false;
-        });
-
+      $("#submitButton").on("click", function() {
         $.ajax({
-            url: 'https://weather.cit.api.here.com/weather/1.0/report.json',
-            type: 'GET',
-            dataType: 'jsonp',
-            jsonp: 'jsonpcallback',
-            data: {
-                product: 'observation',
-                name: 'Dallas',
-                app_id: '6xKDnHG6lDepPse5mWQG',
-                app_code: 'Sbqnvuzea-STJeDJTNfJwA'
-            },
-            success: function (data) {
-                alert(JSON.stringify(data));
-            }
+          type: "POST",
+          url: API_URL,
+          data: {
+            Lots: $("#Lot").val(),
+            Spots: $("#Spots").val()
+          },
+          contentType: "application/json",
+
+          success: function(data) {
+            location.reload();
+          }
         });
 
-    </script>
+        return false;
+      });
 
-</body>
+      $.ajax({
+        url: "https://weather.cit.api.here.com/weather/1.0/report.json",
+        type: "GET",
+        dataType: "jsonp",
+        jsonp: "jsonpcallback",
+        data: {
+          product: "observation",
+          name: "Dallas",
+          app_id: "6xKDnHG6lDepPse5mWQG",
+          app_code: "Sbqnvuzea-STJeDJTNfJwA"
+        },
+        success: function(data) {
+          alert(JSON.stringify(data));
+        }
+      });
+    </script>
+  </body>
 </html>

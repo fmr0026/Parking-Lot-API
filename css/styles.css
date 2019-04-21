@@ -1,0 +1,8 @@
+body,
+html {
+  background-color: rgb(47, 172, 47);
+}
+
+.mapContainer {
+  margin: 2em;
+}
